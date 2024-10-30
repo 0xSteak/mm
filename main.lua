@@ -482,7 +482,7 @@ sapphire.connections[4] = CoinsStarted.OnClientEvent:Connect(function()
 end)
 
 sapphire.connections[5] = game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function()
-    queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/0xSteak/mm/refs/heads/main/main.lua"))(true)')
+    queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/0xSteak/mm/refs/heads/main/main.lua"))()')
     game:GetService("TeleportService").TeleportInitFailed:Connect(function()
         game:GetService("TeleportService"):Teleport(game.PlaceId)
     end)
