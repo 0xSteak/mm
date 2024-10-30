@@ -126,6 +126,27 @@ local function getClosestCoin()
     return closestCoin, closestDistance and closestDistance > 100
 end
 
+local function getRandomClosestCoin()
+    local coins = CoinContainer:GetChildren()
+    local rootPart = Steak.hrp()
+
+    table.sort(coins, function(a, b)
+        if a:FindFirstChild("CoinVisual") and a.CoinVisual.Transparency == 0 and b:FindFirstChild("CoinVisual") and b.CoinVisual.Transparency == 0 then
+            local distanceA = (a.Position - rootPart.Position).Magnitude
+            local distanceB = (b.Position - rootPart.Position).Magnitude
+            return distanceA < distanceB
+        end
+    end)
+
+    local randomCoin
+
+    if #coins >= 5 then
+        randomCoin = coins[math.random(1, #coins)]
+    end
+
+    return randomCoin, (randomCoin.Position - rootPart.Position).Magnitude > 100
+end
+
 -- Get player who has the murderer role
 local function getMurderer()
     if gamemode == "Infection" then return end
@@ -370,7 +391,14 @@ task.spawn(function()
         local suc, msg = pcall(function()
             tweenSpeed = getMyRole() == "Murderer" and sapphire.autoFarm.murdTweenSpeed or sapphire.autoFarm.tweenSpeed
             if CoinContainer and canCollect and sapphire.autoFarm.enabled then
-                local closestCoin, isFar = getClosestCoin()
+                local closestCoin, isFar
+
+                if lostCoinCount >= 5 then
+                    closestCoin, isFar = getRandomClosestCoin()
+                    lostCoinCount = 0
+                else
+                    closestCoin, isFar = getClosestCoin()
+                end
         
                 if closestCoin and closestCoin.Position then
                     local coinBagBefore = coinBag
@@ -400,12 +428,12 @@ task.spawn(function()
                     lostCoinResetTimer = tick() + sapphire.autoFarm.lostCoinResetTime
                 end
     
-                if lostCoinCount >= 5 then
+                --[[if lostCoinCount >= 5 then
                     local coins = CoinContainer:GetChildren()
                     local t: Tween = tween(coins[math.random(1, #coins)].Position + Vector3.new(0, 5, 0), tweenSpeed)
                     t.Completed:Wait()
                     lostCoinCount = 0
-                end
+                end]]
     
                 if closestCoin and closestCoin:FindFirstChild("CoinVisual") then
                     closestCoin.CoinVisual.Transparency = 0.01
