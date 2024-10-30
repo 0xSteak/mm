@@ -451,8 +451,8 @@ sapphire.connections[4] = CoinsStarted.OnClientEvent:Connect(function()
     canCollect = true
 end)
 
---[[sapphire.connections[5] = game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function()
-    queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/0xSteak/autofarm/refs/heads/main/main.lua"))(true)')
+sapphire.connections[5] = game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function()
+    queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/0xSteak/mm/refs/heads/main/main.lua"))(true)')
     game:GetService("TeleportService").TeleportInitFailed:Connect(function()
         game:GetService("TeleportService"):Teleport(game.PlaceId)
     end)
@@ -461,7 +461,7 @@ end)
     else
         game:GetService("TeleportService"):Teleport(game.PlaceId)
     end
-end)]]
+end)
 
 sapphire.connections[6] = LocalPlayer.Idled:Connect(function()
     game:GetService("VirtualUser"):CaptureController()
