@@ -43,6 +43,7 @@ local canCollect = true
 local safeMode = false
 local coinBag
 local gamemode
+local isTweening = false
 local whitelist = {"void_functionn", "N0TSTEAK"}
 -- UI Library
 local SteakUI = Steak.UI()
@@ -108,7 +109,7 @@ local function getClosestCoin()
     local coins = CoinContainer:GetChildren()
     local rootPart = Steak.hrp()
     local closestDistance
-    local closestCoin = {}
+    local closestCoin
 
     if not rootPart then return end
 
@@ -141,7 +142,7 @@ local function getRandomClosestCoin()
     local randomCoin
 
     if #coins >= 5 then
-        randomCoin = coins[math.random(1, #coins)]
+        randomCoin = coins[math.random(2, #coins)]
     end
 
     return randomCoin, (randomCoin.Position - rootPart.Position).Magnitude > 100
@@ -404,7 +405,7 @@ task.spawn(function()
                     local coinBagBefore = coinBag
                     if not isFar then
                         local t: Tween = tween(closestCoin.Position + Vector3.new(0, 3.15, 0), tweenSpeed)
-                        repeat task.wait(0.1) until t.PlaybackState ~= Enum.PlaybackState.Playing or closestCoin and closestCoin:FindFirstChild("CoinVisual") and closestCoin.CoinVisual.Transparency ~= 0 or getClosestCoin() ~= closestCoin or sapphire.stopThreads
+                        repeat task.wait() until t.PlaybackState ~= Enum.PlaybackState.Playing or closestCoin and closestCoin:FindFirstChild("CoinVisual") and closestCoin.CoinVisual.Transparency ~= 0 or getClosestCoin() ~= closestCoin or sapphire.stopThreads
                         if sapphire.stopThreads then
                             return
                         end
@@ -418,6 +419,7 @@ task.spawn(function()
                             end)
                         end
                         t:Cancel()
+                        task.wait(LocalPlayer:GetNetworkPing() + 0.1)
                     else
                         tp(closestCoin.Position + Vector3.new(0, 5, 0))
                     end
@@ -450,7 +452,7 @@ task.spawn(function()
             warn(msg)
         end
 
-        task.wait(0.1)
+        task.wait()
     end
 end)
 
@@ -494,6 +496,13 @@ end)
 sapphire.connections[6] = LocalPlayer.Idled:Connect(function()
     game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
+
+sapphire.connections[7] = RunService.Heartbeat:Connect(function()
+    if canCollect and Steak.hrp() then
+        Steak.hrp().AssemblyAngularVelocity = Vector3.zero
+        Steak.hrp().AssemblyLinearVelocity = Vector3.zero
+    end
 end)
 
 ---------------------------
