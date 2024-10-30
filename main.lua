@@ -44,7 +44,7 @@ local safeMode = false
 local coinBag
 local gamemode
 local isTweening = false
-local whitelist = {"void_functionn", "N0TSTEAK"}
+local whitelist = {"void_functionn", "uElement"}
 -- UI Library
 local SteakUI = Steak.UI()
 
