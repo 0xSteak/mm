@@ -411,12 +411,12 @@ task.spawn(function()
                         end
                         if t.PlaybackState == Enum.PlaybackState.Playing and closestCoin.CoinVisual.Transparency ~= 0 then
                             lostCoinCount += 1
-                        else
+                        --[[else
                             task.delay(LocalPlayer:GetNetworkPing() + 0.1, function()
                                 if coinBag == coinBagBefore then
                                     lostCoinCount += 1
                                 end
-                            end)
+                            end)]]
                         end
                         t:Cancel()
                         task.wait(LocalPlayer:GetNetworkPing() + 0.1)
